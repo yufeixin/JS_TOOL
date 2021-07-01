@@ -14,7 +14,7 @@ var got = require('got');
 var path = require('path');
 var fs = require('fs');
 var { execSync, exec } = require('child_process');
-var proxy = require('http-proxy-middleware');
+var ttydproxy = require('http-proxy-middleware');
 
 var rootPath = path.resolve(__dirname, '..');
 // cookie.sh 文件所在目录
@@ -357,7 +357,7 @@ var options = {
     //}
 };
 // 创建代理
-var exampleProxy = proxy(options);
+var exampleProxy = ttydproxy(options);
 /**
  * terminal
  */
