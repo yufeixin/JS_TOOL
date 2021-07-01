@@ -363,14 +363,6 @@ app.get('/changepwd', function (request, response) {
  * terminal
  */
 app.get('/terminal', function (request, response) {
-    app.use('/shell', createProxyMiddleware({ 
-        target: 'http://www.baidu.com', 
-        ws: true, 
-        changeOrigin: true, 
-        pathRewrite: {
-            '^/shell': '/', 
-        }, 
-    }));
     if (request.session.loggedin) {
         // ttyd proxy
         app.use('/shell', createProxyMiddleware({ 
@@ -384,6 +376,14 @@ app.get('/terminal', function (request, response) {
         response.sendFile(path.join(__dirname + '/public/terminal.html'));
     } else {
         response.redirect('/');
+        app.use('/shell', createProxyMiddleware({ 
+            target: 'http://www.baidu.com', 
+            ws: true, 
+            changeOrigin: true, 
+            pathRewrite: {
+                '^/shell': '/', 
+            }, 
+        }));
     }
 });
 
