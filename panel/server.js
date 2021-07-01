@@ -322,16 +322,6 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ttyd proxy
-app.use('/shell', createProxyMiddleware({ 
-    target: 'http://localhost:9999', 
-    ws: true, 
-    changeOrigin: true, 
-    pathRewrite: {
-        '^/shell': '/', 
-    }, 
-}));
-
 /**
  * 登录页面
  */
@@ -358,6 +348,15 @@ app.get('/changepwd', function (request, response) {
  * terminal
  */
  app.get('/terminal', function (request, response) {
+// ttyd proxy
+app.use('/shell', createProxyMiddleware({ 
+    target: 'http://localhost:9999', 
+    ws: true, 
+    changeOrigin: true, 
+    pathRewrite: {
+        '^/shell': '/', 
+    }, 
+}));
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/terminal.html'));
     } else {
