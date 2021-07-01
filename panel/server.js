@@ -343,16 +343,6 @@ app.get('/changepwd', function (request, response) {
     }
 });
 
-// ttyd proxy
-app.use('/shell', createProxyMiddleware({
-    target: 'https://www.spp.gov.cn/spp/fl/201802/t20180206_364975.shtml',
-    ws: true,
-    changeOrigin: true,
-    pathRewrite: {
-        '^/shell': '/',
-    },
-}));
-
 /**
  * terminal
  */
