@@ -324,12 +324,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // ttyd proxy
 app.use('/shell', createProxyMiddleware({ 
-    target: 'http://localhost:9999', 
-    ws: true, 
-    changeOrigin: true, 
-    pathRewrite: {
-        '^/shell': '/', 
-    }, 
+    if (request.session.loggedin) {
+        target: 'http://localhost:9999', 
+        ws: true, 
+        changeOrigin: true, 
+        pathRewrite: {
+            '^/shell': '/', 
+        }, 
+    } else {
+        response.sendFile(path.join(__dirname + '/public/auth.html'));
+    }
 }));
 
 /**
