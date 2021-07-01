@@ -14,7 +14,8 @@ var got = require('got');
 var path = require('path');
 var fs = require('fs');
 var { execSync, exec } = require('child_process');
-var { createProxyMiddleware } = require('http-proxy-middleware');
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
 
 var rootPath = path.resolve(__dirname, '..');
 // cookie.sh 文件所在目录
@@ -296,6 +297,7 @@ function getLastModifyFilePath(dir) {
     return filePath;
 }
 
+
 var app = express();
 // gzip压缩
 app.use(compression({ level: 6, filter: shouldCompress }));
@@ -320,34 +322,6 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// proxy 中间件的选择项
-var options = {
-    target: 'http://localhost:9999', // 目标服务器 host
-    changeOrigin: true,               // 默认false，是否需要改变原始主机头为目标URL
-    ws: true,                         // 是否代理websockets
-    pathRewrite: {
-        '^/shell': '/',
-    },
-    //router: {
-        // 如果请求主机 == 'dev.localhost:3000',
-        // 重写目标服务器 'http://www.example.org' 为 'http://localhost:8000'
-        //'dev.localhost:3000' : 'http://localhost:9999'
-    //}
-};
-var options1 = {
-    target: 'http://www.baidu.com', // 目标服务器 host
-    changeOrigin: true,               // 默认false，是否需要改变原始主机头为目标URL
-    ws: true,                         // 是否代理websockets
-    pathRewrite: {
-        '^/shell': '/',
-    },
-    //router: {
-        // 如果请求主机 == 'dev.localhost:3000',
-        // 重写目标服务器 'http://www.example.org' 为 'http://localhost:8000'
-        //'dev.localhost:3000' : 'http://localhost:9999'
-    //}
-};
-app.use('/shell', createProxyMiddleware(options1));
 
 /**
  * 登录页面
@@ -371,15 +345,20 @@ app.get('/changepwd', function (request, response) {
     }
 });
 
-// 创建代理
-var exampleProxy = createProxyMiddleware(options);
 /**
  * terminal
  */
 app.get('/terminal', function (request, response) {
     if (request.session.loggedin) {
         // ttyd proxy
-        app.use('/shell', exampleProxy);
+        app.use('/shell', createProxyMiddleware({
+            target: 'http://localhost:9999',
+            ws: true,
+            changeOrigin: true,
+            pathRewrite: {
+                '^/shell': '/',
+            },
+        }));
         response.sendFile(path.join(__dirname + '/public/terminal.html'));
     } else {
         response.redirect('/');
