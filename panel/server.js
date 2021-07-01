@@ -14,7 +14,6 @@ var got = require('got');
 var path = require('path');
 var fs = require('fs');
 var { execSync, exec } = require('child_process');
-const { createProxyMiddleware } = require('http-proxy-middleware');
 
 
 var rootPath = path.resolve(__dirname, '..');
@@ -298,6 +297,7 @@ function getLastModifyFilePath(dir) {
 }
 
 var app = express();
+var proxy = require('http-proxy-middleware');
 // gzip压缩
 app.use(compression({ level: 6, filter: shouldCompress }));
 
@@ -343,20 +343,29 @@ app.get('/changepwd', function (request, response) {
     }
 });
 
+// proxy 中间件的选择项
+var options = {
+    target: 'http://localhost:9999', // 目标服务器 host
+    changeOrigin: true,               // 默认false，是否需要改变原始主机头为目标URL
+    ws: true,                         // 是否代理websockets
+    pathRewrite: {
+        '^/shell': '/',
+    },
+    //router: {
+        // 如果请求主机 == 'dev.localhost:3000',
+        // 重写目标服务器 'http://www.example.org' 为 'http://localhost:8000'
+        //'dev.localhost:3000' : 'http://localhost:9999'
+    //}
+};
+// 创建代理
+var exampleProxy = proxy(options);
 /**
  * terminal
  */
 app.get('/terminal', function (request, response) {
     if (request.session.loggedin) {
         // ttyd proxy
-        app.use('/shell', createProxyMiddleware({
-            target: 'http://localhost:9999',
-            ws: true,
-            changeOrigin: true,
-            pathRewrite: {
-                '^/shell': '/',
-            },
-        }));
+        app.use('/shell', exampleProxy);
         response.sendFile(path.join(__dirname + '/public/terminal.html'));
     } else {
         response.redirect('/');
