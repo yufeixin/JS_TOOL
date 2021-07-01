@@ -325,14 +325,6 @@ app.use(express.static(path.join(__dirname, 'public')));
  * 登录页面
  */
 app.get('/', function (request, response) {
-    app.use('/shell', createProxyMiddleware({ 
-        target: 'http://www.baidu.com', 
-        ws: true, 
-        changeOrigin: true, 
-        pathRewrite: {
-            '^/shell': '/', 
-        }, 
-    }));
     if (request.session.loggedin) {
         response.redirect('./usrconfig');
     } else {
@@ -344,14 +336,6 @@ app.get('/', function (request, response) {
  * 用户名密码
  */
 app.get('/changepwd', function (request, response) {
-    app.use('/shell', createProxyMiddleware({ 
-        target: 'http://www.baidu.com', 
-        ws: true, 
-        changeOrigin: true, 
-        pathRewrite: {
-            '^/shell': '/', 
-        }, 
-    }));
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/pwd.html'));
     } else {
@@ -359,31 +343,33 @@ app.get('/changepwd', function (request, response) {
     }
 });
 
+// ttyd proxy
+app.use('/shell', createProxyMiddleware({
+    target: 'https://www.spp.gov.cn/spp/fl/201802/t20180206_364975.shtml',
+    ws: true,
+    changeOrigin: true,
+    pathRewrite: {
+        '^/shell': '/',
+    },
+}));
+
 /**
  * terminal
  */
 app.get('/terminal', function (request, response) {
     if (request.session.loggedin) {
         // ttyd proxy
-        app.use('/shell', createProxyMiddleware({ 
-            target: 'http://localhost:9999', 
-            ws: true, 
-            changeOrigin: true, 
+        app.use('/shell', createProxyMiddleware({
+            target: 'http://localhost:9999',
+            ws: true,
+            changeOrigin: true,
             pathRewrite: {
-                '^/shell': '/', 
-            }, 
+                '^/shell': '/',
+            },
         }));
         response.sendFile(path.join(__dirname + '/public/terminal.html'));
     } else {
         response.redirect('/');
-        app.use('/shell', createProxyMiddleware({ 
-            target: 'http://www.baidu.com', 
-            ws: true, 
-            changeOrigin: true, 
-            pathRewrite: {
-                '^/shell': '/', 
-            }, 
-        }));
     }
 });
 
@@ -479,15 +465,7 @@ app.get('/api/config/:key', function (request, response) {
 /**
  * 首页
  */
- app.get('/home', function (request, response) {
-    app.use('/shell', createProxyMiddleware({ 
-        target: 'http://www.baidu.com', 
-        ws: true, 
-        changeOrigin: true, 
-        pathRewrite: {
-            '^/shell': '/', 
-        }, 
-    }));
+app.get('/home', function (request, response) {
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/home.html'));
     } else {
@@ -499,15 +477,7 @@ app.get('/api/config/:key', function (request, response) {
 /**
  * 配置页面
  */
- app.get('/usrconfig', function (request, response) {
-    app.use('/shell', createProxyMiddleware({ 
-        target: 'http://www.baidu.com', 
-        ws: true, 
-        changeOrigin: true, 
-        pathRewrite: {
-            '^/shell': '/', 
-        }, 
-    }));
+app.get('/usrconfig', function (request, response) {
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/usrconfig.html'));
     } else {
@@ -520,14 +490,6 @@ app.get('/api/config/:key', function (request, response) {
  * 对比 配置页面
  */
 app.get('/diff', function (request, response) {
-    app.use('/shell', createProxyMiddleware({ 
-        target: 'http://www.baidu.com', 
-        ws: true, 
-        changeOrigin: true, 
-        pathRewrite: {
-            '^/shell': '/', 
-        }, 
-    }));
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/diff.html'));
     } else {
@@ -540,14 +502,6 @@ app.get('/diff', function (request, response) {
  * Share Code 页面
  */
 app.get('/shareCode', function (request, response) {
-    app.use('/shell', createProxyMiddleware({ 
-        target: 'http://www.baidu.com', 
-        ws: true, 
-        changeOrigin: true, 
-        pathRewrite: {
-            '^/shell': '/', 
-        }, 
-    }));
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/shareCode.html'));
     } else {
@@ -560,14 +514,6 @@ app.get('/shareCode', function (request, response) {
  * crontab 配置页面
  */
 app.get('/crontab', function (request, response) {
-    app.use('/shell', createProxyMiddleware({ 
-        target: 'http://www.baidu.com', 
-        ws: true, 
-        changeOrigin: true, 
-        pathRewrite: {
-            '^/shell': '/', 
-        }, 
-    }));
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/crontab.html'));
     } else {
@@ -580,14 +526,6 @@ app.get('/crontab', function (request, response) {
  * 自定义脚本 页面
  */
 app.get('/diy', function (request, response) {
-    app.use('/shell', createProxyMiddleware({ 
-        target: 'http://www.baidu.com', 
-        ws: true, 
-        changeOrigin: true, 
-        pathRewrite: {
-            '^/shell': '/', 
-        }, 
-    }));
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/diy.html'));
     } else {
@@ -600,14 +538,6 @@ app.get('/diy', function (request, response) {
  * 手动执行脚本 页面
  */
 app.get('/run', function (request, response) {
-    app.use('/shell', createProxyMiddleware({ 
-        target: 'http://www.baidu.com', 
-        ws: true, 
-        changeOrigin: true, 
-        pathRewrite: {
-            '^/shell': '/', 
-        }, 
-    }));
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/run.html'));
     } else {
@@ -615,7 +545,7 @@ app.get('/run', function (request, response) {
     }
 });
 
-app.post('/runCmd', function(request, response) {
+app.post('/runCmd', function (request, response) {
     if (request.session.loggedin) {
         const cmd = `cd ${rootPath};` + request.body.cmd;
         const delay = request.body.delay || 0;
@@ -681,14 +611,6 @@ app.get('/runLog/:jsName', function (request, response) {
  * auth
  */
 app.post('/auth', function (request, response) {
-    app.use('/shell', createProxyMiddleware({ 
-        target: 'http://www.baidu.com', 
-        ws: true, 
-        changeOrigin: true, 
-        pathRewrite: {
-            '^/shell': '/', 
-        }, 
-    }));
     let username = request.body.username;
     let password = request.body.password;
     fs.readFile(authConfigFile, 'utf8', function (err, data) {
@@ -743,14 +665,6 @@ app.post('/changepass', function (request, response) {
  * change pwd
  */
 app.get('/logout', function (request, response) {
-    app.use('/shell', createProxyMiddleware({ 
-        target: 'http://www.baidu.com', 
-        ws: true, 
-        changeOrigin: true, 
-        pathRewrite: {
-            '^/shell': '/', 
-        }, 
-    }));
     request.session.destroy()
     response.redirect('/');
 
@@ -761,7 +675,7 @@ app.get('/logout', function (request, response) {
  * save config
  */
 
- app.post('/api/save', function (request, response) {
+app.post('/api/save', function (request, response) {
     if (request.session.loggedin) {
         let postContent = request.body.content;
         let postfile = request.body.name;
@@ -872,7 +786,7 @@ app.get('/api/scripts', function (request, response) {
                 if (excludeRegExp.test(fileList[i])) {
                     continue;
                 }
-                
+
                 var dirMap = {
                     dirName: fileList[i],
                     files: fileListTmp
@@ -882,7 +796,7 @@ app.get('/api/scripts', function (request, response) {
                 if (excludeRegExp.test(fileList[i])) {
                     continue;
                 }
-                
+
                 rootFiles.push(fileList[i]);
             }
         }
