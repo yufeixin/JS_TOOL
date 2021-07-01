@@ -14,7 +14,7 @@ var got = require('got');
 var path = require('path');
 var fs = require('fs');
 var { execSync, exec } = require('child_process');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+var { createProxyMiddleware } = require('http-proxy-middleware');
 
 var rootPath = path.resolve(__dirname, '..');
 // cookie.sh 文件所在目录
