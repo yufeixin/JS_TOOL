@@ -345,20 +345,21 @@ app.get('/changepwd', function (request, response) {
     }
 });
 
+// ttyd proxy
+app.use('/RandomShellEntry', createProxyMiddleware({
+    target: 'http://localhost:9999',
+    ws: true,
+    changeOrigin: true,
+    pathRewrite: {
+        '^/RandomShellEntry': '/',
+    },
+}));
+
 /**
  * terminal
  */
 app.get('/terminal', function (request, response) {
     if (request.session.loggedin) {
-        // ttyd proxy
-        app.use('/shell', createProxyMiddleware({
-            target: 'http://localhost:9999',
-            ws: true,
-            changeOrigin: true,
-            pathRewrite: {
-                '^/shell': '/',
-            },
-        }));
         response.sendFile(path.join(__dirname + '/public/terminal.html'));
     } else {
         response.redirect('/');
