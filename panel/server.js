@@ -319,29 +319,6 @@ app.use(session({
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/shell', createProxyMiddleware(options1));
-
-/**
- * 登录页面
- */
-app.get('/', function (request, response) {
-    if (request.session.loggedin) {
-        response.redirect('./usrconfig');
-    } else {
-        response.sendFile(path.join(__dirname + '/public/auth.html'));
-    }
-});
-
-/**
- * 用户名密码
- */
-app.get('/changepwd', function (request, response) {
-    if (request.session.loggedin) {
-        response.sendFile(path.join(__dirname + '/public/pwd.html'));
-    } else {
-        response.redirect('/');
-    }
-});
 
 // proxy 中间件的选择项
 var options = {
@@ -370,6 +347,30 @@ var options1 = {
         //'dev.localhost:3000' : 'http://localhost:9999'
     //}
 };
+app.use('/shell', createProxyMiddleware(options1));
+
+/**
+ * 登录页面
+ */
+app.get('/', function (request, response) {
+    if (request.session.loggedin) {
+        response.redirect('./usrconfig');
+    } else {
+        response.sendFile(path.join(__dirname + '/public/auth.html'));
+    }
+});
+
+/**
+ * 用户名密码
+ */
+app.get('/changepwd', function (request, response) {
+    if (request.session.loggedin) {
+        response.sendFile(path.join(__dirname + '/public/pwd.html'));
+    } else {
+        response.redirect('/');
+    }
+});
+
 // 创建代理
 var exampleProxy = createProxyMiddleware(options);
 /**
