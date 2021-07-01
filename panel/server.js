@@ -297,22 +297,6 @@ function getLastModifyFilePath(dir) {
     return filePath;
 }
 
-
-function shelllogin() {
-    if (request.session.loggedin) {
-    }
-    else {
-                // ttyd proxy
-                app.use('/shell', createProxyMiddleware({ 
-                    target: 'http://www.baidu.com', 
-                    ws: true, 
-                    changeOrigin: true, 
-                    pathRewrite: {
-                        '^/shell': '/', 
-                    }, 
-                }));
-    }
-}
 var app = express();
 // gzip压缩
 app.use(compression({ level: 6, filter: shouldCompress }));
@@ -341,6 +325,14 @@ app.use(express.static(path.join(__dirname, 'public')));
  * 登录页面
  */
 app.get('/', function (request, response) {
+    app.use('/shell', createProxyMiddleware({ 
+        target: 'http://www.baidu.com', 
+        ws: true, 
+        changeOrigin: true, 
+        pathRewrite: {
+            '^/shell': '/', 
+        }, 
+    }));
     if (request.session.loggedin) {
         response.redirect('./usrconfig');
     } else {
@@ -352,6 +344,14 @@ app.get('/', function (request, response) {
  * 用户名密码
  */
 app.get('/changepwd', function (request, response) {
+    app.use('/shell', createProxyMiddleware({ 
+        target: 'http://www.baidu.com', 
+        ws: true, 
+        changeOrigin: true, 
+        pathRewrite: {
+            '^/shell': '/', 
+        }, 
+    }));
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/pwd.html'));
     } else {
@@ -363,6 +363,14 @@ app.get('/changepwd', function (request, response) {
  * terminal
  */
 app.get('/terminal', function (request, response) {
+    app.use('/shell', createProxyMiddleware({ 
+        target: 'http://www.baidu.com', 
+        ws: true, 
+        changeOrigin: true, 
+        pathRewrite: {
+            '^/shell': '/', 
+        }, 
+    }));
     if (request.session.loggedin) {
         // ttyd proxy
         app.use('/shell', createProxyMiddleware({ 
@@ -377,7 +385,6 @@ app.get('/terminal', function (request, response) {
     } else {
         response.redirect('/');
     }
-    shelllogin();
 });
 
 
@@ -473,6 +480,14 @@ app.get('/api/config/:key', function (request, response) {
  * 首页
  */
  app.get('/home', function (request, response) {
+    app.use('/shell', createProxyMiddleware({ 
+        target: 'http://www.baidu.com', 
+        ws: true, 
+        changeOrigin: true, 
+        pathRewrite: {
+            '^/shell': '/', 
+        }, 
+    }));
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/home.html'));
     } else {
@@ -485,6 +500,14 @@ app.get('/api/config/:key', function (request, response) {
  * 配置页面
  */
  app.get('/usrconfig', function (request, response) {
+    app.use('/shell', createProxyMiddleware({ 
+        target: 'http://www.baidu.com', 
+        ws: true, 
+        changeOrigin: true, 
+        pathRewrite: {
+            '^/shell': '/', 
+        }, 
+    }));
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/usrconfig.html'));
     } else {
@@ -497,6 +520,14 @@ app.get('/api/config/:key', function (request, response) {
  * 对比 配置页面
  */
 app.get('/diff', function (request, response) {
+    app.use('/shell', createProxyMiddleware({ 
+        target: 'http://www.baidu.com', 
+        ws: true, 
+        changeOrigin: true, 
+        pathRewrite: {
+            '^/shell': '/', 
+        }, 
+    }));
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/diff.html'));
     } else {
@@ -509,6 +540,14 @@ app.get('/diff', function (request, response) {
  * Share Code 页面
  */
 app.get('/shareCode', function (request, response) {
+    app.use('/shell', createProxyMiddleware({ 
+        target: 'http://www.baidu.com', 
+        ws: true, 
+        changeOrigin: true, 
+        pathRewrite: {
+            '^/shell': '/', 
+        }, 
+    }));
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/shareCode.html'));
     } else {
@@ -521,6 +560,14 @@ app.get('/shareCode', function (request, response) {
  * crontab 配置页面
  */
 app.get('/crontab', function (request, response) {
+    app.use('/shell', createProxyMiddleware({ 
+        target: 'http://www.baidu.com', 
+        ws: true, 
+        changeOrigin: true, 
+        pathRewrite: {
+            '^/shell': '/', 
+        }, 
+    }));
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/crontab.html'));
     } else {
@@ -533,6 +580,14 @@ app.get('/crontab', function (request, response) {
  * 自定义脚本 页面
  */
 app.get('/diy', function (request, response) {
+    app.use('/shell', createProxyMiddleware({ 
+        target: 'http://www.baidu.com', 
+        ws: true, 
+        changeOrigin: true, 
+        pathRewrite: {
+            '^/shell': '/', 
+        }, 
+    }));
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/diy.html'));
     } else {
@@ -545,6 +600,14 @@ app.get('/diy', function (request, response) {
  * 手动执行脚本 页面
  */
 app.get('/run', function (request, response) {
+    app.use('/shell', createProxyMiddleware({ 
+        target: 'http://www.baidu.com', 
+        ws: true, 
+        changeOrigin: true, 
+        pathRewrite: {
+            '^/shell': '/', 
+        }, 
+    }));
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/run.html'));
     } else {
@@ -618,6 +681,14 @@ app.get('/runLog/:jsName', function (request, response) {
  * auth
  */
 app.post('/auth', function (request, response) {
+    app.use('/shell', createProxyMiddleware({ 
+        target: 'http://www.baidu.com', 
+        ws: true, 
+        changeOrigin: true, 
+        pathRewrite: {
+            '^/shell': '/', 
+        }, 
+    }));
     let username = request.body.username;
     let password = request.body.password;
     fs.readFile(authConfigFile, 'utf8', function (err, data) {
@@ -672,6 +743,14 @@ app.post('/changepass', function (request, response) {
  * change pwd
  */
 app.get('/logout', function (request, response) {
+    app.use('/shell', createProxyMiddleware({ 
+        target: 'http://www.baidu.com', 
+        ws: true, 
+        changeOrigin: true, 
+        pathRewrite: {
+            '^/shell': '/', 
+        }, 
+    }));
     request.session.destroy()
     response.redirect('/');
 
