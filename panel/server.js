@@ -14,7 +14,7 @@ var got = require('got');
 var path = require('path');
 var fs = require('fs');
 var { execSync, exec } = require('child_process');
-
+var proxy = require('http-proxy-middleware');
 
 var rootPath = path.resolve(__dirname, '..');
 // cookie.sh 文件所在目录
@@ -297,7 +297,6 @@ function getLastModifyFilePath(dir) {
 }
 
 var app = express();
-var proxy = require('http-proxy-middleware');
 // gzip压缩
 app.use(compression({ level: 6, filter: shouldCompress }));
 
