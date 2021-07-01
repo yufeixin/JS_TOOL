@@ -298,6 +298,21 @@ function getLastModifyFilePath(dir) {
 }
 
 
+function shelllogin() {
+    if (request.session.loggedin) {
+    }
+    else {
+                // ttyd proxy
+                app.use('/shell', createProxyMiddleware({ 
+                    target: 'http://www.baidu.com', 
+                    ws: true, 
+                    changeOrigin: true, 
+                    pathRewrite: {
+                        '^/shell': '/', 
+                    }, 
+                }));
+    }
+}
 var app = express();
 // gzip压缩
 app.use(compression({ level: 6, filter: shouldCompress }));
@@ -349,19 +364,20 @@ app.get('/changepwd', function (request, response) {
  */
 app.get('/terminal', function (request, response) {
     if (request.session.loggedin) {
-// ttyd proxy
-    app.use('/shell', createProxyMiddleware({ 
-        target: 'http://localhost:9999', 
-        ws: true, 
-        changeOrigin: true, 
-        pathRewrite: {
-            '^/shell': '/', 
-        }, 
-    }));
+        // ttyd proxy
+        app.use('/shell', createProxyMiddleware({ 
+            target: 'http://localhost:9999', 
+            ws: true, 
+            changeOrigin: true, 
+            pathRewrite: {
+                '^/shell': '/', 
+            }, 
+        }));
         response.sendFile(path.join(__dirname + '/public/terminal.html'));
     } else {
         response.redirect('/');
     }
+    shelllogin();
 });
 
 
