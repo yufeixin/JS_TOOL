@@ -1,0 +1,3 @@
+#Auto Config
+RandomShellEntry = Entry
+
