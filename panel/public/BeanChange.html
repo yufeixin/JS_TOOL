@@ -30,7 +30,7 @@
     <br>
     <br>
     <button id="viewdays">每日增长</button>
-    <button id="viewnow">单日增长</button>
+    <button id="viewnow">每日增长</button>
 
     <input type="button" onclick="printfv()" value="显示" />
     <br /><br /><br />
@@ -207,6 +207,48 @@
                 dayconfig.data.datasets.push(newDataset);
             }
             window.myLine.update();
+
+        });
+
+        document.getElementById('viewnow').addEventListener('click', function () {
+            for (let i = 0; i < arr2[arr2.length - 1].length; i++) {
+                DAYS.push(arr2[arr2.length - 1][i]);
+            }
+            //DAYS.shift();
+
+            var barChartData = {
+                type: 'bar',
+                data: {
+                    labels: DAYS,
+                    datasets: []
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: '每日增长图'
+                    },
+                }
+            };
+            var ctx = document.getElementById('canvas').getContext('2d');
+            window.myBar = new Chart(ctx, barChartData);
+
+            var colorName = colorNames[barChartData.datasets.length % colorNames.length];
+			var dsColor = window.chartColors[colorName];
+			var newDataset = {
+				label: 'Dataset ' + barChartData.datasets.length,
+				backgroundColor: color(dsColor).alpha(0.5).rgbString(),
+				borderColor: dsColor,
+				borderWidth: 1,
+				data: []
+			};
+
+			for (var index = 0; index < barChartData.labels.length; ++index) {
+				newDataset.data.push(arr2[arr2.length - 1][index]);
+			}
+
+			barChartData.datasets.push(newDataset);
+			window.myBar.update();
 
         });
 
