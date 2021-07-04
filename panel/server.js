@@ -444,9 +444,6 @@ app.get('/api/config/:key', function (request, response) {
                 case 'diy':
                     content = getFileContentByName(diyFile);
                     break;
-                case 'bean_total':
-                    content = getFileContentByName(AutoConfigPath);
-                    break;
                 default:
                     break;
             }
@@ -702,6 +699,17 @@ app.get('/log', function (request, response) {
 app.get('/AutoConfig', function (request, response) {
     if (request.session.loggedin) {
         response.sendFile(path.join(__dirname + '/public/BeanChange.html'));
+    } else {
+        response.redirect('/');
+    }
+});
+
+/**
+ * 日志查询 页面
+ */
+ app.get('/AutoConfig/bean_total', function (request, response) {
+    if (request.session.loggedin) {
+        response.getFileContentByName(AutoConfigPath);
     } else {
         response.redirect('/');
     }
