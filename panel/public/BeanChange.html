@@ -1,18 +1,19 @@
 <!doctype html>
 <html>
-<meta charset="utf-8"/>
+<meta charset="utf-8" />
+
 <head>
     <title>Line Chart</title>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
     <script src="https://chartjs.bootcss.com/dist/Chart.bundle.js"></script>
     <script src="https://chartjs.bootcss.com/samples/utils.js"></script>
-    <script src="./lib/jquery.js"></script>
     <script src="./lib/papaparse.js"></script>
     <script src="./lib/jschardet.js"></script>
+    <script src="./lib/jquery.csv.js"></script>
     <!--[if lte IE 9]>
 	<script src="./lib/base64.js"></script>
     <![endif]-->
 
-    <script src="csv2arr.js"></script>
     <style>
         canvas {
             -moz-user-select: none;
@@ -33,27 +34,57 @@
     <button id="removeDataset">Remove Dataset</button>
     <button id="addData">Add Data</button>
     <button id="removeData">Remove Data</button>
-    <input type="file" name="csvfile" />
-    <input type="button" onclick="csv()" value="JS转换" />
-    <br /><br /><br />
-    <div id="resTbl"></div>
+
     <script>
-        function csv() {
-            $("input[name=csvfile]").csv2arr(function (arr) {
-                console.log(arr);
-                //something to do here
-                var tblStr = "<table border='1'>";
-                $.each(arr, function (i, line) {
-                    tblStr += "<tr>";
-                    $.each(line, function (i, cell) {
-                        tblStr += "<td>" + cell + "</td>";
+        var arr2 = [];
+        // read csv file and convert to json format
+        function getValue() {
+            $.get('./11.csv',
+                function (data) {
+                    //转换成二维数组，需要引入Papaparse.js
+                    Papa.parse(data, {
+                        complete: function (results) {		// UTF8 \r\n与\n混用时有可能会出问题
+                            //				console.log(results);
+                            var res = results.data;
+                            if (res[res.length - 1] == "") {	//去除最后的空行
+                                res.pop();
+                            }
+                            console.log(res);
+                        }
                     });
-                    tblStr += "</tr>";
                 });
-                $("#resTbl").html(tblStr);
-            });
         }
-        var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        getValue();
+
+
+
+        function readTextFile(filePath, callback) {
+            const xhrFile = new XMLHttpRequest();
+            xhrFile.open("GET", filePath, true);
+            xhrFile.onload = function () {
+                const allText = xhrFile.response;
+                callback(allText)
+            }
+            xhrFile.send();
+        }
+        const filePath = `./11.csv`
+        readTextFile(filePath, (textDetail) => {
+            //转换成二维数组，需要引入Papaparse.js
+            Papa.parse(textDetail, {
+                complete: function (results) {		// UTF8 \r\n与\n混用时有可能会出问题
+                    //				console.log(results);
+                    res = results.data;
+                    if (res[res.length - 1] == "") {	//去除最后的空行
+                        res.pop();
+                    }
+                    console.log(res);
+                    arr2 = res;
+                }
+            });
+        })
+
+        
+        var MONTHS = arr2[0];
         var config = {
             type: 'line',
             data: {
